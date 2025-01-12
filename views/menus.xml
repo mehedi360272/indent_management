@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+<!--        #main menu-->
+        <menuitem
+                id="root_menu_indent_request"
+                name = "Indent Request" />
+        <menuitem
+                id="menu_indent_request"
+                name = "Indent Request"
+                parent="root_menu_indent_request"
+                action="indent_request_action"
+                sequence="100"/>
+    </data>
+</odoo>

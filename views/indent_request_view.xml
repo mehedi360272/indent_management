@@ -1,0 +1,66 @@
+<odoo>
+    <record id="view_indent_request_form" model="ir.ui.view">
+        <field name="name">Indent Request Form</field>
+        <field name="model">indent.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- Action Buttons -->
+                    <button id="button_submit" name="action_submit" string="Submit" class="btn-primary" type="object"
+                            invisible="state != 'draft'"/>
+
+                    <button id="button_approve" name="action_approve" string="Approve" class="btn-success" type="object"
+                            invisible="state != 'submit'"/>
+
+                    <button id="button_refuse" name="action_refuse" string="Refuse" class="btn-danger" type="object"
+                            invisible="state != 'submit'"/>
+
+                    <button id="button_close" name="action_close" string="Close" class="btn-success" type="object"
+                            invisible="state != 'submit'"/>
+
+                    <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-warning" type="object"
+                            invisible="state not in ['draft', 'submit', 'refuse']"/>
+
+                    <button id="button_draft" name="action_draft" string="Set to Draft" class="btn-secondary" type="object"
+                            invisible="state != 'cancel'"/>
+
+                    <!-- Status Bar -->
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,refuse,close,cancel"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h4 class="text-primary">
+                            <field name="name" strign='Indent No' readonly="1"/>
+                        </h4>
+                        <br></br>
+                    </div>
+                    <group>
+                        <field name="indent_by" readonly="1"/>
+                        <field name="indent_date" readonly="1"/>
+                        <field name="need_by"/>
+                        <field name="department" readonly="1"/>
+                        <field name="badge_id"/>
+                        <field name="state" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Items">
+                            <field name="item_ids">
+                                <tree create="True" edit="True" delete="False" editable="bottom" class="tree_no_open">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="uom"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="indent_request_action">
+        <field name="name">Indent Request</field>
+        <field name="res_model">indent.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
