@@ -68,13 +68,16 @@
                                     <field name="current_stock"/>
                                     <field name="quantity"
                                            string="Quantity"
-                                           readonly="parent.state == 'submit'"
+                                           readonly="parent.state in ['submit', 'approve']"
                                            decoration-danger="quantity > approve_qty and parent.state not in ['done', 'cancel']"
                                            on_change="1"/>
 
-                                    <!--                                    <field name="quantity"/>-->
                                     <field name="received_qty"/>
-                                    <field name="approve_qty"/>
+                                    <field name="approve_qty"
+                                           string="Approve Qty"
+                                           readonly="parent.state == 'approve'"
+                                           decoration-danger="quantity > approve_qty and parent.state not in ['done', 'cancel']"
+                                           on_change="1"/>
                                     <field name="remarks"/>
                                 </tree>
                             </field>

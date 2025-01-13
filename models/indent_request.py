@@ -155,7 +155,7 @@ class IndentRequestItem(models.Model):
 
     current_stock = fields.Float(string='Current Stock', compute='_compute_current_stock', store=True)
     approve_qty = fields.Float(string='Approved Qty')
-    received_qty = fields.Float(string='Received Qty')
+    received_qty = fields.Float(string='Received Qty', compute='_compute_received_qty', store=True)
     remarks = fields.Text(string='Remarks')
 
     @api.onchange('quantity')
@@ -177,6 +177,26 @@ class IndentRequestItem(models.Model):
         for record in self:
             if record.indent_id.state == 'submit':
                 raise UserError("You cannot modify the quantity once the indent request is submitted.")
+
+    @api.depends('indent_id')
+    def _compute_received_qty(self):
+        for record in self:
+            # Initialize received quantity to 0
+            received_qty = 0.0
+
+            # Search stock.picking related to the indent request
+            pickings = self.env['stock.picking'].search([
+                ('origin', '=', record.indent_id.name),  # Origin can be the indent request name
+                ('state', '=', 'done')  # Only consider pickings that are in 'done' state
+            ])
+
+            # Sum the received quantity for the related product
+            for picking in pickings:
+                for move in picking.move_lines:
+                    if move.product_id.id == record.product_id.id:
+                        received_qty += move.quantity_done  # quantity_done is the actual received quantity
+
+            record.received_qty = received_qty
 
     @api.model
     def write(self, vals):
