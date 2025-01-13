@@ -34,7 +34,7 @@
                         <button class="btn oe_stat_button btn-outline-secondary flex-grow-1 flex-lg-grow-0"
                                 type="object"
                                 name="action_view_picking"
-                                icon="fa-car">
+                                icon="fa-truck">
                             <field string="Picking" name="internal_transfer_count" widget="statinfo"/>
                         </button>
                     </div>
