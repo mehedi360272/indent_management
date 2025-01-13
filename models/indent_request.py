@@ -155,7 +155,6 @@ class IndentRequestItem(models.Model):
                                   readonly=True)
     current_stock = fields.Float(string='Current Stock', compute='_compute_current_stock', store=True)
     approve_qty = fields.Float(string='Approved Qty')
-    received_qty = fields.Float(string='Received Qty')
     remarks = fields.Text(string='Remarks')
 
     @api.onchange('quantity')
