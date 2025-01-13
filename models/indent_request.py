@@ -2,13 +2,14 @@
 
 from odoo import models, fields, api, _
 import logging
-
+from odoo.tools.float_utils import float_compare, float_round
 from odoo.exceptions import UserError
 
 
 class IndentRequest(models.Model):
     _name = 'indent.request'
     _description = 'Indent Request'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(strign='Indent No', required=True, index=True, copy=False, default="NEW")
     location_from = fields.Many2one('stock.location', string='Location From', domain=[('usage', '=', 'internal')],
@@ -144,18 +145,17 @@ class IndentRequestItem(models.Model):
     _description = 'Indent Request Item'
 
     product_id = fields.Many2one('product.template', string='Product', required=True)
-    quantity = fields.Float(string='Quantity', required=True)
+    quantity = fields.Float(string='Quantity', required=True, store=True)
+
     uom = fields.Many2one('uom.uom', string='Unit of Measure', related='product_id.uom_id', readonly=True, store=True)
     indent_id = fields.Many2one('indent.request', string='Indent Request')
-
     location_from = fields.Many2one('stock.location', string='Location From', related='indent_id.location_from',
                                     readonly=True)
     location_to = fields.Many2one('stock.location', string='Location To', related='indent_id.location_to',
                                   readonly=True)
-
     current_stock = fields.Float(string='Current Stock', compute='_compute_current_stock', store=True)
     approve_qty = fields.Float(string='Approved Qty')
-    received_qty = fields.Float(string='Received Qty', compute='_compute_received_qty', store=True)
+    received_qty = fields.Float(string='Received Qty')
     remarks = fields.Text(string='Remarks')
 
     @api.onchange('quantity')
@@ -177,26 +177,6 @@ class IndentRequestItem(models.Model):
         for record in self:
             if record.indent_id.state == 'submit':
                 raise UserError("You cannot modify the quantity once the indent request is submitted.")
-
-    @api.depends('indent_id')
-    def _compute_received_qty(self):
-        for record in self:
-            # Initialize received quantity to 0
-            received_qty = 0.0
-
-            # Search stock.picking related to the indent request
-            pickings = self.env['stock.picking'].search([
-                ('origin', '=', record.indent_id.name),  # Origin can be the indent request name
-                ('state', '=', 'done')  # Only consider pickings that are in 'done' state
-            ])
-
-            # Sum the received quantity for the related product
-            for picking in pickings:
-                for move in picking.move_lines:
-                    if move.product_id.id == record.product_id.id:
-                        received_qty += move.quantity_done  # quantity_done is the actual received quantity
-
-            record.received_qty = received_qty
 
     @api.model
     def write(self, vals):

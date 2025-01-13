@@ -68,11 +68,11 @@
                                     <field name="current_stock"/>
                                     <field name="quantity"
                                            string="Quantity"
-                                           readonly="parent.state in ['submit', 'approve']"
+                                           readonly="parent.state == 'submit'"
                                            decoration-danger="quantity > approve_qty and parent.state not in ['done', 'cancel']"
                                            on_change="1"/>
 
-                                    <field name="received_qty"/>
+                                    <field name="received_qty" readonly="1"/>
                                     <field name="approve_qty"
                                            string="Approve Qty"
                                            readonly="parent.state == 'approve'"
@@ -84,6 +84,11 @@
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
