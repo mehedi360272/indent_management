@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "indent_management",
+    'name': "Indent Management",
 
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
@@ -25,6 +25,7 @@ Long description of module's purpose
         'security/ir.model.access.csv',
         'views/indent_request_view.xml',
         'views/menus.xml',
+        'data/sequence.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

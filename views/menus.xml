@@ -3,7 +3,7 @@
 <!--        #main menu-->
         <menuitem
                 id="root_menu_indent_request"
-                name = "Indent Request" />
+                name = "Indent Management" />
         <menuitem
                 id="menu_indent_request"
                 name = "Indent Request"

@@ -21,13 +21,23 @@
                     <button id="button_cancel" name="action_cancel" string="Cancel" class="btn-warning" type="object"
                             invisible="state not in ['draft', 'submit', 'refuse']"/>
 
-                    <button id="button_draft" name="action_draft" string="Set to Draft" class="btn-secondary" type="object"
+                    <button id="button_draft" name="action_draft" string="Set to Draft" class="btn-secondary"
+                            type="object"
                             invisible="state != 'cancel'"/>
 
                     <!-- Status Bar -->
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,refuse,close,cancel"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submit,approve,refuse,close,cancel"/>
                 </header>
                 <sheet>
+                    <div name="button_box" position="inside">
+                        <button class="btn oe_stat_button btn-outline-secondary flex-grow-1 flex-lg-grow-0"
+                                type="object"
+                                name="action_view_picking"
+                                icon="fa-car">
+                            <field string="Picking" name="internal_transfer_count" widget="statinfo"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h4 class="text-primary">
                             <field name="name" strign='Indent No' readonly="1"/>
@@ -35,20 +45,37 @@
                         <br></br>
                     </div>
                     <group>
-                        <field name="indent_by" readonly="1"/>
-                        <field name="indent_date" readonly="1"/>
-                        <field name="need_by"/>
-                        <field name="department" readonly="1"/>
-                        <field name="badge_id"/>
-                        <field name="state" readonly="1"/>
+                        <group>
+                            <field name="location_from"/>
+                            <field name="location_to"/>
+                            <field name="indent_date" readonly="1"/>
+                            <field name="need_by"/>
+                            <field name="note"/>
+                        </group>
+                        <group>
+                            <field name="indent_by" readonly="1"/>
+                            <field name="department" readonly="1"/>
+                            <field name="approval_authority" readonly="1"/>
+                            <field name="badge_id"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Items">
                             <field name="item_ids">
-                                <tree create="True" edit="True" delete="False" editable="bottom" class="tree_no_open">
+                                <tree create="True" edit="True" delete="True" editable="bottom" class="tree_no_open">
                                     <field name="product_id"/>
-                                    <field name="quantity"/>
                                     <field name="uom"/>
+                                    <field name="current_stock"/>
+                                    <field name="quantity"
+                                           string="Quantity"
+                                           readonly="parent.state == 'submit'"
+                                           decoration-danger="quantity > approve_qty and parent.state not in ['done', 'cancel']"
+                                           on_change="1"/>
+
+                                    <!--                                    <field name="quantity"/>-->
+                                    <field name="received_qty"/>
+                                    <field name="approve_qty"/>
+                                    <field name="remarks"/>
                                 </tree>
                             </field>
                         </page>
@@ -58,9 +85,24 @@
         </field>
     </record>
 
+    <record id="view_indent_request_tree" model="ir.ui.view">
+        <field name="name">Indent Request Tree</field>
+        <field name="model">indent.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="indent_by"/>
+                <field name="indent_date"/>
+                <field name="department"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="indent_request_action">
         <field name="name">Indent Request</field>
         <field name="res_model">indent.request</field>
         <field name="view_mode">tree,form</field>
     </record>
+
 </odoo>
