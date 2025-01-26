@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="0">
+        <record id="module_category_indent" model="ir.module.category">
+            <field name="name">Indent Management</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="group_indent_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="indent_management.module_category_indent"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">The user will have access to create records.</field>
+        </record>
+
+        <record id="group_indent_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="indent_management.module_category_indent"/>
+            <field name="implied_ids" eval="[(4, ref('indent_management.group_indent_user'))]"/>
+            <field name="comment">The user will have access to approve records.</field>
+        </record>
+    </data>
+</odoo>
+

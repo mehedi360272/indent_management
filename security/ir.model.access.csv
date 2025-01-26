@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_indent_request,indent_request,model_indent_request,base.group_user,1,1,1,1
-access_indent_request_item,indent_request_item,model_indent_request_item,base.group_user,1,1,1,1
+access_indent_request,indent_request,model_indent_request,indent_management.group_indent_user,1,1,1,0
+access_indent_request_item,indent_request_item,model_indent_request_item,indent_management.group_indent_user,1,1,0,0
+access_indent_request,indent_request,model_indent_request,indent_management.group_indent_manager,1,1,0,0
+access_indent_request_item,indent_request_item,model_indent_request_item,indent_management.group_indent_manager,1,1,0,0
